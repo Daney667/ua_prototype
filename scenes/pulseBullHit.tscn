@@ -1,0 +1,66 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/newa.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_killTimer_timeout():
+	queue_free()
+	pass # Replace with function body.
+"
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+flags_vertex_lighting = true
+flags_do_not_receive_shadows = true
+flags_disable_ambient_light = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 8
+particles_anim_v_frames = 4
+particles_anim_loop = false
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="QuadMesh" id=3]
+material = SubResource( 2 )
+size = Vector2( 3, 3 )
+
+[node name="pulseBullHit" type="Spatial"]
+script = SubResource( 1 )
+
+[node name="CPUParticles" type="CPUParticles" parent="."]
+amount = 1
+explosiveness = 0.83
+mesh = SubResource( 3 )
+emission_shape = 1
+emission_sphere_radius = 1.0
+emission_points = PoolVector3Array( 0, 0, 0 )
+direction = Vector3( 0, 0, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+angle = 325.2
+angle_random = 1.0
+scale_amount = 3.0
+scale_amount_random = 1.0
+anim_speed = 1.0
+
+[node name="killTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+[connection signal="timeout" from="killTimer" to="." method="_on_killTimer_timeout"]

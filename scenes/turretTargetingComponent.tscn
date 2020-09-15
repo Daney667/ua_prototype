@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+var targetList
+export var targetGroup = \"team_blue\"
+var closestTarget
+var tarPos
+var priorityTarv
+export var maxRange = 10000
+onready var boss = get_parent()
+signal closestTargetPosition()
+signal noTargetInRange()
+
+func setPriorityTarget(pV):
+	priorityTarv = pV
+func _ready():
+	pass
+func _process(delta):
+	if boss != null:
+#		if boss.STATE == \"targeting\":
+		targetClosest()
+	else:
+		push_error(\"turrettargetingcomponent without BOSS!!1\")
+func targetClosest():
+	if priorityTarv == null:
+		targetList = get_tree().get_nodes_in_group(targetGroup)
+		if !targetList.empty():
+			var myPos = boss.global_transform.origin
+			var curClosestDist = maxRange
+			closestTarget = null
+			var dist
+			for n in targetList:
+				var targetPos = n.global_transform.origin
+				dist = myPos.distance_to(targetPos)
+				if dist < curClosestDist:
+					curClosestDist = dist
+					closestTarget = n
+			if closestTarget != null:
+				emit_signal(\"closestTargetPosition\", closestTarget.global_transform.origin)
+			else:
+				emit_signal(\"noTargetInRange\")
+		else:
+			emit_signal(\"noTargetInRange\")
+	elif priorityTarv != null:
+		priorityMove()
+	pass
+
+func priorityMove():
+	emit_signal(\"closestTargetPosition\", priorityTarv)
+"
+
+[node name="turretTargetingComponent" type="Node"]
+script = SubResource( 1 )

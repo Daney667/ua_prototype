@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/UAProto_Scenes/debugHUD.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AccelLabel" type="RichTextLabel" parent="."]
+margin_left = 879.0
+margin_top = 534.0
+margin_right = 999.0
+margin_bottom = 574.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FricOffsetLabel" type="Label" parent="."]
+margin_left = 871.0
+margin_top = 483.0
+margin_right = 990.0
+margin_bottom = 531.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AltitudeLabel" type="Label" parent="."]
+margin_left = 913.0
+margin_top = 36.3843
+margin_right = 1003.0
+margin_bottom = 80.3843
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RangeLabel" type="Label" parent="."]
+margin_left = 852.0
+margin_top = 245.0
+margin_right = 1008.0
+margin_bottom = 314.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VelocityLabel" type="Label" parent="."]
+margin_left = 471.599
+margin_top = 515.933
+margin_right = 548.599
+margin_bottom = 540.933
+__meta__ = {
+"_edit_use_anchors_": false
+}

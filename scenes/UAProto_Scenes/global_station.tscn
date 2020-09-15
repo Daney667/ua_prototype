@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/UAProto_Scenes/global_station.gd" type="Script" id=1]
+
+[node name="global_station" type="Spatial"]
+script = ExtResource( 1 )

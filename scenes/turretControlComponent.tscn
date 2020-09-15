@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+var boss
+var turret
+var barrel
+var curRotX
+var tarv
+var mScale
+export var turnSpeed = 2.0
+export var maxIncline = 20
+export var maxDecline = 5
+export var precisionMargin = 0.02
+var STATE = \"idle\"
+signal changedTarget()
+signal aimIsGood()
+func _ready():
+	boss = get_parent()
+	mScale = boss.scale
+	pass
+func setTarV(v):
+	tarv = v
+	emit_signal(\"changedTarget\",tarv)
+	STATE = \"tracking\"
+#	barrel.set_as_toplevel(true)
+#	turret.set_as_toplevel(true)
+#	print(\"new target in turretControl\")
+func _physics_process(delta):
+	if boss != null and turret != null and tarv != null :
+		aim(delta)
+func aim(delta):
+	var oldTarv = tarv
+	oldTarv.y += 1
+	tarv.y = turret.global_transform.origin.y
+	var turGoalTrans = Transform()
+	turGoalTrans.origin = turret.global_transform.origin
+	turGoalTrans.basis = turret.global_transform.basis.scaled(mScale)
+	turGoalTrans = turGoalTrans.looking_at(tarv, Vector3.UP)
+	turret.global_transform = turret.global_transform.interpolate_with(turGoalTrans, delta*turnSpeed)
+
+	var barrelGoalTrans = Transform()
+	if barrel != null:
+		barrelGoalTrans.origin = barrel.global_transform.origin
+		barrelGoalTrans = barrelGoalTrans.looking_at(oldTarv, Vector3.UP)
+	
+	var goalRotZ = turGoalTrans.basis.z
+	var curRotZ = turret.global_transform.basis.z
+	var ang = curRotZ.angle_to(goalRotZ)
+	if abs(ang) < precisionMargin:
+		if barrel != null:
+			barrel.global_transform = barrel.global_transform.interpolate_with(barrelGoalTrans, delta*turnSpeed)
+		if STATE == \"tracking\":
+			emit_signal(\"aimIsGood\")
+			STATE = \"ontarget\"
+	else:
+		STATE = \"tracking\"
+	pass
+"
+
+[node name="turretControlComponent" type="Node"]
+script = SubResource( 1 )

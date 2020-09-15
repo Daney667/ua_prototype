@@ -1,0 +1,101 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://scenes/test_world1.gd" type="Script" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/floor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_hoverTank1a.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/UAProto_Scenes/buildings2.meshlib" type="MeshLibrary" id=4]
+[ext_resource path="res://scenes/UAProto_Scenes/BaseBody.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/UAProto_Scenes/GunshipRigidBody.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/UAProto_Scenes/flyingDroneBody.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/UAProto_Scenes/scoutBody.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/UAProto_Scenes/powerStation.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/UAProto_Scenes/enemyBase.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_turretSpatial.tscn" type="PackedScene" id=11]
+[ext_resource path="res://environ2.res" type="Environment" id=12]
+[ext_resource path="res://scenes/PathFollow.gd" type="Script" id=13]
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_tank1.tscn" type="PackedScene" id=14]
+
+[sub_resource type="Curve3D" id=1]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, 26.9336, -0.0108562, -15.746, -22.2176, 0.144461, 62.2659, 22.2176, -0.144461, -62.2659, 165.472, -0.0962611, -107.47, -20.4667, 0.14256, 60.8067, 20.4667, -0.14256, -60.8067, 155.012, -0.959065, -416.666, -74.6006, 0.0172008, 38.9214, 74.6006, -0.0172008, -38.9214, 245.891, -1.36239, -603.137, -129.584, -0.117747, 13.9219, 129.584, 0.117747, -13.9219, 567.439, -1.35183, -740.099, -161.374, -0.0820453, 40.8264, 161.374, 0.0820453, -40.8264, 980.267, -0.664975, -671.082, -80.7272, 0.218049, 114.646, 80.7272, -0.218049, -114.646, 1226.38, -0.716862, -797.72, 22.1376, 0.161473, 49.0294, -22.1376, -0.161473, -49.0294, 1316.43, -1.18288, -1006.63, 0, 0, 0, 0, 0, 0, 1311.54, -1.4369, -1096.87 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0, 0, 0, 0, 0 )
+}
+
+[node name="world" type="Spatial"]
+transform = Transform( 0.999993, 0.0011946, -0.00345118, -0.00120407, 0.999996, -0.00274973, 0.00344788, 0.00275385, 0.99999, 0, 0, 0 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.773542, -0.403896, 0.488365, 0, 0.770602, 0.637316, -0.633745, -0.492991, 0.596093, 157.252, 20.2293, 0 )
+light_energy = 0.5
+shadow_enabled = true
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 300.0
+
+[node name="floorMesh" parent="." instance=ExtResource( 2 )]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( 12 )
+
+[node name="BaseBody" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 0 )
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource( 4 )
+cell_size = Vector3( 10, 2, 10 )
+data = {
+"cells": PoolIntArray( 786450, 6, 0, 851957, 13, 0, 786443, 16, 0, 851958, 16, 536870912, 851962, 16, 0, 786492, 19, 0, 851962, 19, 536870912, 786531, 32, 0, 786574, 75, 0, 851845, 114, 0, 851949, 168, 0, 851876, 65360, 0, 786437, 65400, 0, 851931, 65406, 0, 786463, 65412, 0, 786544, 65463, 0, 786546, 65473, 0, 786465, 65490, 0, 786591, 65491, 0, 786598, 65498, 0, 786593, 65504, 0, 786477, 65517, 0, 851949, 65519, 0, 851962, 65525, 0 )
+}
+__meta__ = {
+"_editor_clip_": 0,
+"_editor_floor_": Vector3( 0, 12, 0 )
+}
+
+[node name="powerStation" parent="." instance=ExtResource( 9 )]
+transform = Transform( 1, 1.19144e-10, 9.31323e-10, -8.79481e-10, 1, 0, 0, 0, 1, 91.8729, -0.0649612, -63.8537 )
+
+[node name="enemyBase" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 9.09495e-13, 4.65661e-10, -4.1382e-10, 1, 0, 0, 0, 1, -1341.98, 1.5095, 1136.6 )
+
+[node name="Path" type="Path" parent="enemyBase"]
+curve = SubResource( 1 )
+
+[node name="PathFollow" type="PathFollow" parent="enemyBase/Path"]
+rotation_mode = 4
+cubic_interp = false
+script = ExtResource( 13 )
+
+[node name="ua_test_hoverTank1a" parent="enemyBase/Path/PathFollow" instance=ExtResource( 3 )]
+
+[node name="ua_test_turretSpatial" parent="." instance=ExtResource( 11 )]
+transform = Transform( 1, 1.17325e-10, 1.39698e-09, -1.34514e-09, 1, 0, 0, 0, 1, 190.809, 0.0894877, -51.0142 )
+team = "bot"
+
+[node name="ua_test_turretSpatial2" parent="." instance=ExtResource( 11 )]
+transform = Transform( 1, 9.09495e-13, 9.31323e-10, -8.79481e-10, 1, 0, 0, 0, 1, -939.277, -0.0973872, -204.841 )
+team = "bot"
+
+[node name="ua_test_turretSpatial3" parent="." instance=ExtResource( 11 )]
+transform = Transform( 1, 1.19144e-10, 9.31323e-10, -8.79481e-10, 1, 0, 0, 0, 1, -360.509, 1.57799, 731.732 )
+team = "bot"
+
+[node name="ua_test_turretSpatial4" parent="." instance=ExtResource( 11 )]
+transform = Transform( 1, 1.22782e-10, 1.39698e-09, -1.34514e-09, 1, 0, 0, 2.32831e-10, 1, 707.475, 0.151242, -254.792 )
+team = "bot"
+
+[node name="GunshipRigidBody" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 1.19144e-10, 9.31323e-10, -8.79481e-10, 1, 0, 0, 0, 1, 53.0633, 13.1266, 22.7811 )
+mass = 35.0
+thrust_max = 5000
+
+[node name="flyingDroneBody" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 1.22782e-10, 1.39698e-09, -1.34514e-09, 1, 0, 0, 2.32831e-10, 1, 32.911, 4.9733, -24.1274 )
+
+[node name="scoutBody" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 1.19144e-10, 9.31323e-10, -8.79481e-10, 1, 0, 0, 0, 1, -48.0198, 10.9371, -1.86457 )
+
+[node name="ua_test_tank1" parent="." instance=ExtResource( 14 )]
+transform = Transform( 2, 1.86446e-09, 9.31323e-10, -2.69029e-09, 2, 0, 0, 0, 2, 43.5762, 1.8867, -3.65217 )

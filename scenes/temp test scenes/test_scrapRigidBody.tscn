@@ -1,0 +1,82 @@
+[gd_scene load_steps=6 format=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+friction = 0.6
+rough = true
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends RigidBody
+var scrap_value
+var spd = 15
+func getValue():
+	return scrap_value
+func _ready():
+	add_to_group(\"scrap\")
+	scale = Vector3(1+randf(),1+randf(),1+randf())
+	var offset = Vector3(rand_range(-1,1), 1, rand_range(-1,1))
+	apply_torque_impulse(offset* (spd*0.75))
+	offset = offset.normalized() * spd
+	apply_central_impulse(offset)
+	pass
+func giveScrap():
+	queue_free()
+	return getValue()
+func _on_freezeTimer_timeout():
+#	mode = MODE_KINEMATIC
+	sleeping = true
+#	set_collision_mask_bit(0, false)
+	set_collision_mask_bit(3, false)
+#	$CollisionShape.disabled = true
+	pass # Replace with function body.
+
+
+func _on_decayTimer_timeout():
+	queue_free()
+	pass # Replace with function body.
+"
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.25, 0.25, 0.25 )
+
+[sub_resource type="CubeMesh" id=4]
+size = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="SpatialMaterial" id=5]
+flags_unshaded = true
+albedo_color = Color( 0.12, 0.12, 0.12, 1 )
+
+[node name="scrapRigidBody" type="RigidBody"]
+collision_layer = 8
+collision_mask = 8
+mass = 5.0
+physics_material_override = SubResource( 1 )
+script = SubResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 3 )
+
+[node name="Area" type="Area" parent="."]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape2" type="CollisionShape" parent="Area"]
+shape = SubResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="freezeTimer" type="Timer" parent="."]
+wait_time = 16.0
+one_shot = true
+autostart = true
+
+[node name="decayTimer" type="Timer" parent="."]
+wait_time = 180.0
+one_shot = true
+autostart = true
+
+[node name="VisibilityEnabler" type="VisibilityEnabler" parent="."]
+pause_animations = false
+[connection signal="timeout" from="freezeTimer" to="." method="_on_freezeTimer_timeout"]
+[connection signal="timeout" from="decayTimer" to="." method="_on_decayTimer_timeout"]

@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+export (float) var hoverHeight = 5
+var old_hoverHeight
+var falling
+var hoverRay = null
+signal sendHoverV()
+var boss
+var v
+func _ready():
+	boss = get_parent()
+	old_hoverHeight = hoverHeight	
+	pass
+func initRay(pRay):
+	hoverRay = pRay
+func _physics_process(delta):
+	if boss:
+		v = Vector3(0,0,0)
+		hoverRay.force_raycast_update()
+		var diff
+		if hoverRay.is_colliding():
+			var curLen = (hoverRay.global_transform.origin - hoverRay.get_collision_point()).length()
+			diff = (hoverHeight - curLen)
+			if curLen < hoverHeight:
+				falling = false
+				v = Vector3(0, diff,0)
+			if curLen > hoverHeight:
+	#			falling or gliding?
+				falling = true
+			v = Vector3(0,diff,0)
+
+
+func _on_Timer_timeout():
+	emit_signal(\"sendHoverV\", v)
+	pass # Replace with function body.
+"
+
+[node name="hoverComponent" type="Node"]
+script = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

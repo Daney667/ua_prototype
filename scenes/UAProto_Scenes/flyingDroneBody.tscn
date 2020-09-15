@@ -1,0 +1,109 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://models/units/drone3.tres" type="ArrayMesh" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/flyingDroneBody.gd" type="Script" id=2]
+[ext_resource path="res://models/units/drone3_diffuse1tmp.png" type="Texture" id=3]
+[ext_resource path="res://scenes/healthComponent.tscn" type="PackedScene" id=4]
+[ext_resource path="res://images/crosshair1.png" type="Texture" id=5]
+[ext_resource path="res://images/crosshair2.png" type="Texture" id=6]
+[ext_resource path="res://models/units/images/drone3_emission.png" type="Texture" id=7]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 1.55939
+height = 2.43894
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_texture = ExtResource( 3 )
+emission_enabled = true
+emission = Color( 0.988235, 0.929412, 0.298039, 1 )
+emission_energy = 1.0
+emission_operator = 1
+emission_on_uv2 = false
+emission_texture = ExtResource( 7 )
+
+[sub_resource type="CubeMesh" id=3]
+size = Vector3( 0.5, 0.5, 5 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_unshaded = true
+flags_no_depth_test = true
+flags_do_not_receive_shadows = true
+
+[sub_resource type="SphereMesh" id=5]
+material = SubResource( 4 )
+radial_segments = 8
+rings = 4
+
+[node name="flyingDroneBody" type="KinematicBody"]
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="rotationHelper" type="Position3D" parent="."]
+
+[node name="Camera" type="Camera" parent="rotationHelper"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.108, 2.499, 3.533 )
+far = 1000.0
+
+[node name="centerCrosshair" type="TextureRect" parent="rotationHelper/Camera"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 6 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="weaponCrosshair" type="TextureRect" parent="rotationHelper/Camera"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 32, 32 )
+texture = ExtResource( 5 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RayCast" type="RayCast" parent="rotationHelper/Camera"]
+enabled = true
+cast_to = Vector3( 0, 0, -300 )
+
+[node name="chassis_rotationHelper" type="Position3D" parent="."]
+
+[node name="chassis" type="MeshInstance" parent="chassis_rotationHelper"]
+mesh = ExtResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="muzzle" type="Position3D" parent="chassis_rotationHelper/chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, -2 )
+
+[node name="muzzle2" type="Position3D" parent="chassis_rotationHelper/chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, -3.86176 )
+
+[node name="gunbase" type="Position3D" parent="chassis_rotationHelper/chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, 0 )
+
+[node name="RayCast" type="RayCast" parent="chassis_rotationHelper/chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.836 )
+enabled = true
+cast_to = Vector3( 0, 0, -500 )
+
+[node name="RemoteTransform" type="RemoteTransform" parent="chassis_rotationHelper/chassis"]
+remote_path = NodePath("../../../CollisionShape")
+
+[node name="pointer" type="MeshInstance" parent="chassis_rotationHelper"]
+visible = false
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="aimerMesh" type="MeshInstance" parent="."]
+visible = false
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="shootTimer" type="Timer" parent="."]
+
+[node name="healthComponent" parent="." instance=ExtResource( 4 )]
+[connection signal="timeout" from="shootTimer" to="." method="_on_shootTimer_timeout"]

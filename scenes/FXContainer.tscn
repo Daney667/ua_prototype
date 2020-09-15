@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+const packedRedHit = preload(\"res://scenes/UAProto_Scenes/redHitParts.tscn\")
+const packedRedBullet = preload(\"res://scenes/UAProto_Scenes/ua_test_bullet.tscn\")
+const packedBlueHit = preload(\"res://scenes/UAProto_Scenes/blueHitParts.tscn\")
+func _ready():
+	pass
+"
+
+[node name="FXContainer" type="Node"]
+script = SubResource( 1 )

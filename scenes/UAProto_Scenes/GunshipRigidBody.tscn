@@ -1,0 +1,90 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://blueTeam.material" type="Material" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/GunshipRigidBody.gd" type="Script" id=2]
+[ext_resource path="res://scenes/UAProto_Scenes/debugHUD.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/healthComponent.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/turretTargetingComponent.tscn" type="PackedScene" id=5]
+[ext_resource path="res://images/crosshair2.png" type="Texture" id=6]
+
+[sub_resource type="PhysicsMaterial" id=1]
+rough = true
+bounce = 0.2
+absorbent = true
+
+[sub_resource type="CapsuleMesh" id=2]
+mid_height = 4.0
+radial_segments = 16
+rings = 4
+
+[sub_resource type="ConvexPolygonShape" id=3]
+points = PoolVector3Array( -0.972427, -0.0538756, 2.10652, -0.972427, 0.0538756, -2.10652, -0.930859, 0.109411, 2.29939, -0.923073, -0.380021, -2.00859, -0.923073, -0.380021, 2.00859, -0.923073, 0.380021, -2.00859, -0.923073, 0.380021, 2.00859, -0.871337, -0.381162, 2.287, -0.772004, -0.165402, -2.59189, -0.769494, 0.329728, -2.5287, -0.696829, -0.697018, -2.09072, -0.696829, -0.697018, 2.09072, -0.696829, 0.697018, 2.09072, -0.642927, 0.749987, -1.98202, -0.499043, -0.221862, 2.82888, -0.496231, 0.386022, 2.75742, -0.495122, 0.495316, -2.69644, -0.388194, -0.388194, -2.82876, -0.381162, 0.871337, 2.287, -0.380021, -0.923073, -2.00859, -0.380021, -0.923073, 2.00859, -0.380021, 0.923073, -2.00859, -0.380021, 0.923073, 2.00859, -0.329904, -0.769454, -2.52857, -0.329904, -0.769453, 2.52856, -0.22359, -0.0557499, -2.96286, -0.165401, -0.6066, 2.75727, -0.1654, 0.606597, 2.75725, -0.165402, 0.772004, -2.59189, -0.0559468, -0.22359, 2.96286, -0.0540645, -0.972399, -2.10646, -0.0540645, 0.972399, 2.10646, 0.0538756, -0.972427, 2.10652, 0.0538756, 0.972427, -2.10652, 0.165401, -0.6066, -2.75727, 0.167622, 0.167622, -2.96249, 0.167622, 0.167622, 2.96249, 0.329727, -0.769492, -2.52869, 0.329728, -0.769494, 2.5287, 0.329727, 0.769492, 2.52869, 0.380021, -0.923073, -2.00859, 0.380021, -0.923073, 2.00859, 0.380021, 0.923073, -2.00859, 0.380021, 0.923073, 2.00859, 0.381162, 0.871337, -2.287, 0.482299, -0.857337, 1.98225, 0.4953, 0.4953, -2.69635, 0.496401, -0.386003, 2.75729, 0.661985, -0.330895, -2.64814, 0.696829, -0.697018, 2.09072, 0.696829, 0.697018, 2.09072, 0.749987, -0.642927, -1.98202, 0.749987, 0.642927, -1.98202, 0.769492, -0.329727, 2.52869, 0.772004, 0.165402, 2.59189, 0.923073, -0.380021, -2.00859, 0.923073, -0.380021, 2.00859, 0.923073, 0.380021, -2.00859, 0.923073, 0.380021, 2.00859, 0.930859, 0.109411, -2.29939, 0.967934, -0.161259, -1.93554, 0.967934, 0.161259, -1.93554, 0.972429, -0.0538757, 2.10653, 0.972427, 0.0538756, 2.10652 )
+
+[sub_resource type="CylinderMesh" id=4]
+height = 0.5
+radial_segments = 16
+rings = 2
+
+[sub_resource type="BoxShape" id=5]
+extents = Vector3( 1.47794, 0.749391, 2.87624 )
+
+[node name="GunshipRigidBody" type="RigidBody"]
+mass = 40.0
+physics_material_override = SubResource( 1 )
+continuous_cd = true
+linear_damp = 0.1
+angular_damp = 0.99
+script = ExtResource( 2 )
+thrust_max = 500
+TURN_SPEED = 20000
+
+[node name="chassis" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = ExtResource( 1 )
+
+[node name="Camera" type="Camera" parent="chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.9 )
+fov = 75.0
+far = 2000.0
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 3 )
+
+[node name="tail" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 2.9 )
+mesh = SubResource( 4 )
+material/0 = ExtResource( 1 )
+
+[node name="rotor" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17288, 0 )
+
+[node name="landingShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.48364, 0 )
+shape = SubResource( 5 )
+
+[node name="Control" parent="." instance=ExtResource( 3 )]
+
+[node name="healthComponent" parent="." instance=ExtResource( 4 )]
+hlth = 200
+
+[node name="cannonMuzzle" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6 )
+
+[node name="fireTimer" type="Timer" parent="."]
+
+[node name="turretTargetingComponent" parent="." instance=ExtResource( 5 )]
+targetGroup = "bot"
+maxRange = 100000
+
+[node name="targetLock" type="TextureRect" parent="."]
+visible = false
+self_modulate = Color( 0.686275, 0.0470588, 0.0352941, 1 )
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 32, 32 )
+texture = ExtResource( 6 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="timeout" from="fireTimer" to="." method="_on_fireTimer_timeout"]
