@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://redTeam.material" type="Material" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/redDebris.gd" type="Script" id=2]
+
+[sub_resource type="CubeMesh" id=1]
+material = ExtResource( 1 )
+size = Vector3( 1, 1, 1 )
+
+[sub_resource type="ConvexPolygonShape" id=2]
+points = PoolVector3Array( -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5 )
+
+[node name="redDebris" type="RigidBody"]
+collision_layer = 4
+collision_mask = 5
+mass = 5.0
+script = ExtResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 2 )
+
+[node name="deathTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="deathTimer" to="." method="_on_deathTimer_timeout"]

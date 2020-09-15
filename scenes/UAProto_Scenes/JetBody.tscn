@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/UAProto_Scenes/JetBody.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 2, 2, 4 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 6, 0.5, 2 )
+
+[sub_resource type="CubeMesh" id=3]
+size = Vector3( 0.5, 2, 1 )
+
+[sub_resource type="ConvexPolygonShape" id=4]
+points = PoolVector3Array( -0.999842, -1, -1.97018, -0.999842, -1, 1.97018, -0.968099, 1, -1.90861, -0.968099, 1, 1.90861, 0.999957, 1, -1.90861, 0.999957, 1, 1.90861, 1, -0.968297, -1.90869, 1, -0.968297, 1.90869 )
+
+[node name="JetBody" type="KinematicBody"]
+script = ExtResource( 1 )
+mass = 3
+MOVE_SPEED_MAX = 500
+TURN_SPEED = 3
+
+[node name="chassis" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="Camera" type="Camera" parent="chassis"]
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0.0678792, 2.07042 )
+fov = 75.0
+far = 1500.0
+
+[node name="Position3D" type="Position3D" parent="chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38404, 0 )
+
+[node name="wings" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="tail" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.874025, -2.31387 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 4 )

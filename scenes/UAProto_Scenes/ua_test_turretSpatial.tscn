@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_turretSpatial.gd" type="Script" id=1]
+[ext_resource path="res://scenes/turretControlComponent.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/turretTargetingComponent.tscn" type="PackedScene" id=3]
+[ext_resource path="res://redTeam.material" type="Material" id=4]
+[ext_resource path="res://scenes/healthComponent.tscn" type="PackedScene" id=5]
+
+[sub_resource type="SphereMesh" id=1]
+material = ExtResource( 4 )
+radius = 1.5
+height = 1.5
+radial_segments = 8
+rings = 8
+is_hemisphere = true
+
+[sub_resource type="CubeMesh" id=2]
+material = ExtResource( 4 )
+size = Vector3( 0.75, 0.75, 3 )
+
+[sub_resource type="CylinderShape" id=3]
+radius = 1.60174
+height = 1.51575
+
+[node name="ua_test_turretSpatial" type="StaticBody"]
+script = ExtResource( 1 )
+
+[node name="turret" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="barrelPivot" type="Position3D" parent="turret"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+
+[node name="barrel" type="MeshInstance" parent="turret/barrelPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="muzzle" type="Position3D" parent="turret/barrelPivot/barrel"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75404 )
+
+[node name="turretControlComponent" parent="." instance=ExtResource( 2 )]
+turnSpeed = 8.0
+precisionMargin = 0.2
+
+[node name="healthComponent" parent="." instance=ExtResource( 5 )]
+
+[node name="shootTimer" type="Timer" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.774001, 0 )
+shape = SubResource( 3 )
+
+[node name="turretTargetingComponent" parent="." instance=ExtResource( 3 )]
+
+[node name="VisibilityNotifier" type="VisibilityNotifier" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.696406, -0.378482 )
+aabb = AABB( -1.47327, -1, -2.0438, 2.94653, 2, 4.0876 )
+[connection signal="timeout" from="shootTimer" to="." method="_on_shootTimer_timeout"]

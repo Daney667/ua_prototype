@@ -1,0 +1,69 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://blueTeam.material" type="Material" id=1]
+[ext_resource path="res://scenes/MotionTrail/MotionTrail.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/UAProto_Scenes/basicMissileComponent.gd" type="Script" id=3]
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_missileBasic.gd" type="Script" id=4]
+[ext_resource path="res://scenes/UAProto_Scenes/homingComponent.tscn" type="PackedScene" id=5]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="CapsuleMesh" id=2]
+material = ExtResource( 1 )
+radius = 0.25
+mid_height = 0.5
+radial_segments = 8
+rings = 3
+
+[sub_resource type="CubeMesh" id=3]
+size = Vector3( 0.1, 0.1, 2 )
+
+[sub_resource type="SphereShape" id=4]
+radius = 20.0
+
+[node name="ua_test_missileBasic" type="KinematicBody"]
+collision_layer = 0
+script = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="aimer" type="MeshInstance" parent="."]
+visible = false
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="MotionTrail" parent="." instance=ExtResource( 2 )]
+cast_shadow = 0
+motionDelta = 5.0
+startColor = Color( 0, 0.054902, 0.862745, 1 )
+endColor = Color( 0, 0.054902, 0.364706, 0 )
+
+[node name="basicMissileComponent" type="Node" parent="."]
+script = ExtResource( 3 )
+
+[node name="burnoutTimer" type="Timer" parent="basicMissileComponent"]
+one_shot = true
+
+[node name="trueDeathTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+autostart = true
+
+[node name="homingComponent" parent="." instance=ExtResource( 5 )]
+max_range = 400
+
+[node name="ProximityArea" type="Area" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="ProximityArea"]
+shape = SubResource( 4 )
+[connection signal="timeout" from="basicMissileComponent/burnoutTimer" to="basicMissileComponent" method="_on_burnoutTimer_timeout"]
+[connection signal="timeout" from="trueDeathTimer" to="." method="_on_trueDeathTimer_timeout"]
+[connection signal="body_entered" from="ProximityArea" to="." method="_on_ProximityArea_body_entered"]

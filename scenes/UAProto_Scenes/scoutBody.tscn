@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://blueTeam.material" type="Material" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/scoutBody.gd" type="Script" id=2]
+[ext_resource path="res://scenes/healthComponent.tscn" type="PackedScene" id=3]
+
+[sub_resource type="CylinderMesh" id=1]
+material = ExtResource( 1 )
+radial_segments = 12
+rings = 2
+
+[sub_resource type="CubeMesh" id=2]
+material = ExtResource( 1 )
+size = Vector3( 4, 1, 1 )
+
+[sub_resource type="ConvexPolygonShape" id=3]
+points = PoolVector3Array( -1.94843, -0.5, -0.5, -1.91364, -0.490991, 0.5, -1.91364, 0.5, -0.490991, -1.91364, 0.5, 0.5, 1.91364, -0.490991, 0.5, 1.91364, 0.5, -0.490991, 1.91364, 0.5, 0.5, 1.94843, -0.5, -0.5 )
+
+[sub_resource type="ConvexPolygonShape" id=4]
+points = PoolVector3Array( -0.983586, -0.983778, -0.0612454, -0.983586, -0.983778, 0.0612454, -0.983586, 0.983778, -0.0612454, -0.983586, 0.983778, 0.0612454, -0.885452, -0.977285, -0.427419, -0.885452, -0.977285, 0.427419, -0.885452, 0.977285, -0.427419, -0.885452, 0.977285, 0.427419, -0.849995, -0.971527, -0.516005, -0.849995, -0.971527, 0.516005, -0.849995, 0.971527, -0.516005, -0.849995, 0.971527, 0.516005, -0.516013, -0.971522, -0.849987, -0.516013, -0.971522, 0.849987, -0.516013, 0.971522, -0.849987, -0.516013, 0.971522, 0.849987, -0.427431, -0.977284, -0.885449, -0.427431, -0.977284, 0.885449, -0.427431, 0.977284, -0.885449, -0.427431, 0.977284, 0.885449, -0.0612537, -0.983584, -0.983584, -0.0612537, -0.983584, 0.983584, -0.0612537, 0.983584, -0.983584, -0.0612537, 0.983584, 0.983584, 0.0614003, -0.983545, -0.983545, 0.0614003, -0.983545, 0.983545, 0.0614003, 0.983545, -0.983545, 0.0614003, 0.983545, 0.983545, 0.427311, -0.977109, -0.885481, 0.427311, -0.977109, 0.885481, 0.427311, 0.977109, -0.885481, 0.427311, 0.977109, 0.885481, 0.515986, -0.971553, -0.850014, 0.515986, -0.971553, 0.850014, 0.515986, 0.971553, -0.850014, 0.515986, 0.971553, 0.850014, 0.849979, -0.971558, -0.516021, 0.849979, -0.971558, 0.516021, 0.849979, 0.971558, -0.516021, 0.849979, 0.971558, 0.516021, 0.885469, -0.97714, -0.427355, 0.885469, -0.97714, 0.427355, 0.885469, 0.97714, -0.427355, 0.885469, 0.97714, 0.427355, 0.983586, -0.983821, -0.061248, 0.983586, -0.983821, 0.061248, 0.983586, 0.983821, -0.061248, 0.983586, 0.983821, 0.061248 )
+
+[node name="scoutBody" type="KinematicBody"]
+script = ExtResource( 2 )
+
+[node name="chassis" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="Camera" type="Camera" parent="chassis"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.86349 )
+fov = 75.0
+far = 2000.0
+
+[node name="RayCast" type="RayCast" parent="chassis/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.86349 )
+cast_to = Vector3( 0, 0, -2 )
+
+[node name="Position3D" type="Position3D" parent="chassis/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.88568 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="chassis"]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="CollisionShape2" type="CollisionShape" parent="."]
+shape = SubResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 4 )
+
+[node name="healthComponent" parent="." instance=ExtResource( 3 )]
+hlth = 300

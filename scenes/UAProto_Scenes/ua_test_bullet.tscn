@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://redTeam.material" type="Material" id=1]
+[ext_resource path="res://scenes/UAProto_Scenes/ua_test_bullet.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleMesh" id=1]
+material = ExtResource( 1 )
+radius = 0.5
+radial_segments = 16
+rings = 2
+
+[sub_resource type="SphereShape" id=2]
+radius = 0.5
+
+[node name="ua_test_bullet" type="KinematicBody"]
+collision_layer = 2
+script = ExtResource( 2 )
+SPEED = 200
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="deathTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="deathTimer" to="." method="_on_deathTimer_timeout"]
